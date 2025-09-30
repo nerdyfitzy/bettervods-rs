@@ -48,7 +48,7 @@ const initializePlayer = (
     };
 };
 
-const m3u8Schema = z.string()
+const m3u8Schema = z.array(z.string()).length(2);
 
 export const TwitchPlayer = ({ vod }: { vod: string }) => {
     const [player, setPlayer] = useState<Player | null>(null);
@@ -64,10 +64,10 @@ export const TwitchPlayer = ({ vod }: { vod: string }) => {
 
     const convertMutation = useMutation({
         mutationKey: ['convert'],
-        mutationFn: (data: { m3u8: string, startTime: string, endTime: string }) => {
-            const { m3u8, startTime, endTime } = data
-            console.log(m3u8, startTime, endTime);
-            return invoke('convert_from_m3u8', { url: m3u8, startTime, endTime })
+        mutationFn: (data: { m3u8: string, startTime: string, endTime: string, name: string }) => {
+            const { m3u8, startTime, endTime, name } = data
+            console.log(m3u8, startTime, endTime, name);
+            return invoke('convert_from_m3u8', { url: m3u8, startTime, endTime, name })
         },
         onSuccess: () => console.log('successful convert!'),
         onError: () => console.log('error oopsies')
@@ -82,16 +82,18 @@ export const TwitchPlayer = ({ vod }: { vod: string }) => {
     const dur = dayjs.duration(start * 1000);
 
     function submitVod() {
-        const m3u8 = m3u8Schema.parse(variables[variables.length - 1])
-        console.log(m3u8)
+        console.log(variables)
+        const [m3u8, name] = m3u8Schema.parse(variables[0])
         const startTime = dur.format("HH:mm:ss")
         const vodLength = player?.getDuration()
         const endTime =
             start + 1800 >= (vodLength as number)
                 ? dayjs.duration((vodLength as number) * 1000).format("HH:mm:ss")
                 : dur.add({ minutes: 30 }).format("HH:mm:ss")
-        convertMutation.mutate({ m3u8, startTime, endTime })
+        convertMutation.mutate({ m3u8, startTime, endTime, name })
     }
+
+
     return (
         <>
             <h1 className='m-4 font-bold text-lg text-left'>Choose your start time, VODs are saved in 30 minute increments.</h1>

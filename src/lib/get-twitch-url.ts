@@ -21,7 +21,7 @@ const responseSchema = z.object({
 });
 
 
-export const getVod = async (url: string) => {
+export const getVod = async (url: string, name: string) => {
     const id = url.split("videos/")[1]?.split("?")[0];
     console.log(id, "id");
     const resp = await fetch("https://gql.twitch.tv/gql", {
@@ -63,5 +63,5 @@ export const getVod = async (url: string) => {
 
     console.log(title, finalUrl);
 
-    return finalUrl;
+    return [finalUrl, name];
 };

@@ -120,3 +120,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+    overflow-y: clip;
+    overflow-x: clip;
+}

@@ -6,6 +6,8 @@ import { Player } from "@/types/twitch-player";
 import { Button } from "@/components/ui/button";
 import { z } from 'zod';
 import { useMutation, useMutationState } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import Spinner from './ui/spinner';
 
 dayjs.extend(duration)
 
@@ -53,6 +55,7 @@ const m3u8Schema = z.array(z.string()).length(2);
 export const TwitchPlayer = ({ vod }: { vod: string }) => {
     const [player, setPlayer] = useState<Player | null>(null);
     const [start, setStart] = useState(0)
+    const navigate = useNavigate({ from: '/convert' })
 
     const variables = useMutationState({
         filters: {
@@ -69,7 +72,7 @@ export const TwitchPlayer = ({ vod }: { vod: string }) => {
             console.log(m3u8, startTime, endTime, name);
             return invoke('convert_from_m3u8', { url: m3u8, startTime, endTime, name })
         },
-        onSuccess: () => console.log('successful convert!'),
+        onSuccess: () => navigate({ to: '/' }),
         onError: () => console.log('error oopsies')
     })
 
@@ -83,7 +86,7 @@ export const TwitchPlayer = ({ vod }: { vod: string }) => {
 
     function submitVod() {
         console.log(variables)
-        const [m3u8, name] = m3u8Schema.parse(variables[0])
+        const [m3u8, name] = m3u8Schema.parse(variables[variables.length - 1])
         const startTime = dur.format("HH:mm:ss")
         const vodLength = player?.getDuration()
         const endTime =
@@ -109,7 +112,9 @@ export const TwitchPlayer = ({ vod }: { vod: string }) => {
                         <p className='text-xl'>{dur.format('HH:mm:ss')} - {dur.add({ minutes: 30 }).format("HH:mm:ss")}</p>
                     </div>
                     <div>
-                        <Button onClick={submitVod}>Submit and upload</Button>
+                        <Button onClick={submitVod}>
+                            {convertMutation.isPending ? <Spinner /> : 'Submit and download'}
+                        </Button>
                     </div>
                 </div>
             </div>

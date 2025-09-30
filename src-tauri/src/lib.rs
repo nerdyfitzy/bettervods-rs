@@ -7,11 +7,15 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+
+#[tauri::command]
+fn get_all_vods() {}
+
 #[tauri::command]
 fn convert_from_m3u8(url: &str, name: &str, start_time: &str, end_time: &str) -> Option<i32> {
     if let Some(base_dirs) = BaseDirs::new() {
         let home = base_dirs.cache_dir();
-        let final_str = format!("bettervods\\{}.mkv", name);
+        let final_str = format!("bettervods\\vods\\{}.mkv", name);
         let file_path = home.join(Path::new(&final_str));
         println!("{:?}", file_path);
         let mut cmd = Command::new("ffmpeg")
@@ -56,8 +60,23 @@ fn convert_from_m3u8(url: &str, name: &str, start_time: &str, end_time: &str) ->
     }
 }
 
+fn create_vods_dir() {
+    println!("checking");
+    if let Some(base_dirs) = BaseDirs::new() {
+        let local_dir = base_dirs.cache_dir();
+
+        let vods_dir = local_dir.join(Path::new("bettervods\\vods"));
+
+        if !vods_dir.exists() {
+            let _ = fs::create_dir(vods_dir);
+            println!("created dir");
+        }
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    create_vods_dir();
     tauri::Builder::default()
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())

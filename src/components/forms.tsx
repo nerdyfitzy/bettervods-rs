@@ -57,52 +57,55 @@ export function Converter() {
     }
     return (
         <>
-            {
-                (!vodId) ?
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-4 w-1/3 rounded-lg border-2 border-slate-300 bg-card p-8 drop-shadow-lg"
-                        >
-                            <h2 className="text-xl font-bold">Enter Twitch VOD URL</h2>
-                            <FormField
-                                control={form.control}
-                                name="url"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="https://twitch.tv/videos/128307129736"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Label htmlFor="name">VOD Name</Label>
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="fitzy vs Zain at Genesis"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+            <section className="w-full h-full flex flex-col justify-center items-center">
 
-                            {error ? <p>Invalid VOD link. Please make sure it follows the conventions in the placeholder above.</p> : <></>}
-                            <Button type="submit">Submit</Button>
-                        </form>
-                    </Form>
-                    : <TwitchPlayer vod={vodId as string} />
-            }
+                {
+                    (!vodId) ?
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-4 w-1/3 rounded-lg border-2 border-slate-300 bg-card p-8 drop-shadow-lg"
+                            >
+                                <h2 className="text-xl font-bold">Enter Twitch VOD URL</h2>
+                                <FormField
+                                    control={form.control}
+                                    name="url"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="https://twitch.tv/videos/128307129736"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Label htmlFor="name">VOD Name</Label>
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="fitzy vs Zain at Genesis"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {error ? <p>Invalid VOD link. Please make sure it follows the conventions in the placeholder above.</p> : <></>}
+                                <Button type="submit">Submit</Button>
+                            </form>
+                        </Form>
+                        : <TwitchPlayer vod={vodId as string} />
+                }
+            </section>
         </>
     );
 }

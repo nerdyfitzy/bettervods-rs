@@ -15,7 +15,6 @@ function App() {
     }, [])
     return (
         <>
-            <script src="https://player.twitch.tv/js/embed/v1.js" async></script>
             <main className="dark bg-background text-white h-screen w-screen flex flex-col justify-center items-center">
                 <Converter />
             </main>

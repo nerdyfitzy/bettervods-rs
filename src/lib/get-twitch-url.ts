@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { fetch } from "@tauri-apps/plugin-http";
 
 //1080p60
 //720p60

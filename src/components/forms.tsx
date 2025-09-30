@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TwitchPlayer } from "./twitch-player";
+import { useMutation } from "@tanstack/react-query";
+import { getVod } from "@/lib/get-twitch-url";
 
 const converterFormSchema = z.object({
     url: z
@@ -30,6 +32,13 @@ export function Converter() {
 
     const [vodId, setVodId] = useState<string | null>(null)
     const [error, setError] = useState<boolean>(false)
+    const mutation = useMutation({
+        mutationKey: ['m3u8'],
+        mutationFn: (data: { url: string }) => {
+            return getVod(data.url)
+        },
+        onSuccess: () => console.log('success!')
+    })
 
     function onSubmit(values: z.infer<typeof converterFormSchema>) {
         console.log(values.url);
@@ -38,7 +47,7 @@ export function Converter() {
         const vodId = parts[parts.length - 1]
         if (typeof vodId == "string") {
             setVodId(vodId)
-
+            mutation.mutate({ url: values.url })
         } else {
             setError(true)
         }

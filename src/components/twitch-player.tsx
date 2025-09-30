@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { invoke } from '@tauri-apps/api/core';
 import { Player } from "@/types/twitch-player";
 import { Button } from "@/components/ui/button";
 import { z } from 'zod';
+import { useMutation, useMutationState } from '@tanstack/react-query';
 
 dayjs.extend(duration)
 
@@ -46,18 +48,50 @@ const initializePlayer = (
     };
 };
 
+const m3u8Schema = z.string()
 
 export const TwitchPlayer = ({ vod }: { vod: string }) => {
     const [player, setPlayer] = useState<Player | null>(null);
     const [start, setStart] = useState(0)
+
+    const variables = useMutationState({
+        filters: {
+            mutationKey: ['m3u8'],
+            status: 'success'
+        },
+        select: (mutation) => mutation.state.data
+    })
+
+    const convertMutation = useMutation({
+        mutationKey: ['convert'],
+        mutationFn: (data: { m3u8: string, startTime: string, endTime: string }) => {
+            const { m3u8, startTime, endTime } = data
+            console.log(m3u8, startTime, endTime);
+            return invoke('convert_from_m3u8', { url: m3u8, startTime, endTime })
+        },
+        onSuccess: () => console.log('successful convert!'),
+        onError: () => console.log('error oopsies')
+    })
 
     useEffect(() => {
         const cleanup = initializePlayer(vod, setPlayer);
 
         return cleanup;
     }, [vod]);
+
     const dur = dayjs.duration(start * 1000);
 
+    function submitVod() {
+        const m3u8 = m3u8Schema.parse(variables[variables.length - 1])
+        console.log(m3u8)
+        const startTime = dur.format("HH:mm:ss")
+        const vodLength = player?.getDuration()
+        const endTime =
+            start + 1800 >= (vodLength as number)
+                ? dayjs.duration((vodLength as number) * 1000).format("HH:mm:ss")
+                : dur.add({ minutes: 30 }).format("HH:mm:ss")
+        convertMutation.mutate({ m3u8, startTime, endTime })
+    }
     return (
         <>
             <h1 className='m-4 font-bold text-lg text-left'>Choose your start time, VODs are saved in 30 minute increments.</h1>
@@ -73,7 +107,7 @@ export const TwitchPlayer = ({ vod }: { vod: string }) => {
                         <p className='text-xl'>{dur.format('HH:mm:ss')} - {dur.add({ minutes: 30 }).format("HH:mm:ss")}</p>
                     </div>
                     <div>
-                        <Button >Submit and upload</Button>
+                        <Button onClick={submitVod}>Submit and upload</Button>
                     </div>
                 </div>
             </div>

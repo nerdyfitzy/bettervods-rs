@@ -17,10 +17,6 @@ function RouteComponent() {
     })
 
 
-    if (data) {
-        console.log(data)
-    }
-
     return (
         <>
             <section className=' h-full w-full p-8 '>

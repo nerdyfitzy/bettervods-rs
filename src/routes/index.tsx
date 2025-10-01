@@ -15,6 +15,7 @@ function RouteComponent() {
         queryFn: () => invoke('get_all_vods')
     })
 
+
     if (data) {
         console.log(data)
     }

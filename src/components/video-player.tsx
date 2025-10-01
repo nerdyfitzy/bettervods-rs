@@ -13,6 +13,7 @@ import {
     DefaultVideoLayout,
     defaultLayoutIcons,
 } from "@vidstack/react/player/layouts/default";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -27,6 +28,8 @@ function onProviderChange(
 function VideoPlayer({ link, name }: { link: string; name: string }) {
     const ref = useRef<MediaPlayerInstance>(null),
         { currentTime } = useStore(MediaPlayerInstance, ref);
+
+    console.log(convertFileSrc(link))
     return (
         <MediaPlayer
             onProviderChange={onProviderChange}
@@ -48,7 +51,7 @@ function VideoPlayer({ link, name }: { link: string; name: string }) {
                     },
                 },
             }}
-            src={link}
+            src={convertFileSrc(link)}
             viewType="video"
             streamType="on-demand"
             logLevel="warn"
@@ -60,6 +63,10 @@ function VideoPlayer({ link, name }: { link: string; name: string }) {
             </MediaProvider>
             <DefaultVideoLayout icons={defaultLayoutIcons} />
         </MediaPlayer>
+
+        // <video width="750" height="500" controls>
+        //     <source src={convertFileSrc(link)} type="video/mp4" />
+        // </video>
     );
 }
 

@@ -27,6 +27,24 @@ fn get_all_vods() -> Vec<OsString> {
 }
 
 #[tauri::command]
+fn get_full_path(name: &str) -> String {
+    if let Some(base_dirs) = BaseDirs::new() {
+        let home = base_dirs.cache_dir();
+        let final_str = format!("bettervods\\vods\\{}", name);
+        let file_path = home.join(Path::new(&final_str));
+
+        if let Some(path_str) = &file_path.to_str() {
+            let owned = path_str.to_string();
+            owned
+        } else {
+            panic!();
+        }
+    } else {
+        panic!();
+    }
+}
+
+#[tauri::command]
 fn is_name_available(name: &str) -> bool {
     if let Some(base_dirs) = BaseDirs::new() {
         let home = base_dirs.cache_dir();
@@ -109,12 +127,14 @@ fn create_vods_dir() {
 pub fn run() {
     create_vods_dir();
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             convert_from_m3u8,
             is_name_available,
-            get_all_vods
+            get_all_vods,
+            get_full_path
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

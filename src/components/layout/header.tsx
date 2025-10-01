@@ -1,7 +1,12 @@
 import { Link } from "@tanstack/react-router"
 import { Button } from "../ui/button"
+import { openPath } from "@tauri-apps/plugin-opener"
 
 function Header() {
+
+    const open = () => {
+        openPath('$APPCACHE').then(_ => console.log('done'))
+    }
     return (
 
         <header className="bg-background dark text-white flex h-screen w-1/6 flex-col justify-start gap-16 border-b border-b-slate-300 p-8">
@@ -22,11 +27,18 @@ function Header() {
                         Add new VOD
                     </Link>
                 </Button>
-                <Button variant="outline" asChild>
-                    <Link to='/support'>
-                        Support my work!
-                    </Link>
+
+                {
+                    // <Button variant="outline" asChild>
+                    //     <Link to='/support'>
+                    //         Support my work!
+                    //     </Link>
+                    // </Button>
+                }
+                <Button onClick={open} variant="secondary" className="absolute bottom-8">
+                    Open VOD folder
                 </Button>
+
             </nav>
         </header>
     )

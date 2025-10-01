@@ -3,7 +3,6 @@ import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/audio.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import VideoPlayer from "@/components/video-player";
-import { useMediaRemote } from "@vidstack/react";
 import { invoke } from '@tauri-apps/api/core';
 
 export const Route = createFileRoute('/videos/$videoTitle')({

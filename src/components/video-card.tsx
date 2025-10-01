@@ -6,13 +6,7 @@ function Video({ title }: { title: string; id?: number }) {
         <Link to='/videos/$videoTitle' params={{ videoTitle: title }}>
             <Card className="relative min-h-fit border-2 bg-card p-8 shadow-md drop-shadow-xl hover:bg-slate-800">
                 <CardContent className="flex flex-col gap-4">
-                    <img
-                        className="rounded-md"
-                        alt="Thumbnail"
-                        width={1280}
-                        height={720}
-                        src="../../public/bkmeal.png"
-                    />
+                    <h1>placeholder for thumbnail</h1>
                     <div className="flex flex-row justify-start">
                         <p className="text-lg font-bold">{title}</p>
                     </div>

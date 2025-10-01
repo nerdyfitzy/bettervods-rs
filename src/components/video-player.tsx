@@ -1,11 +1,8 @@
 import { useRef } from "react";
 import {
-    isHLSProvider,
     MediaPlayer,
     MediaPlayerInstance,
     MediaProvider,
-    type MediaProviderAdapter,
-    type MediaProviderChangeEvent,
     Poster,
     useStore,
 } from "@vidstack/react";
@@ -15,15 +12,6 @@ import {
 } from "@vidstack/react/player/layouts/default";
 import { convertFileSrc } from "@tauri-apps/api/core";
 
-function onProviderChange(
-    provider: MediaProviderAdapter | null,
-    nativeEvent: MediaProviderChangeEvent,
-) {
-    if (isHLSProvider(provider)) {
-        // Static import
-        // Or, dynamic import
-    }
-}
 
 function VideoPlayer({ link, name }: { link: string; name: string }) {
     const ref = useRef<MediaPlayerInstance>(null),
@@ -32,7 +20,6 @@ function VideoPlayer({ link, name }: { link: string; name: string }) {
     console.log(convertFileSrc(link))
     return (
         <MediaPlayer
-            onProviderChange={onProviderChange}
             ref={ref}
             keyTarget="document"
             crossOrigin="anonymous"

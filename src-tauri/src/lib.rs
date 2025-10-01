@@ -126,6 +126,7 @@ fn create_vods_dir() {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     create_vods_dir();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())

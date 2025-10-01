@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as ConvertRouteImport } from './routes/convert'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VideosVideoTitleRouteImport } from './routes/videos/$videoTitle'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -28,35 +29,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VideosVideoTitleRoute = VideosVideoTitleRouteImport.update({
+  id: '/videos/$videoTitle',
+  path: '/videos/$videoTitle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/convert': typeof ConvertRoute
   '/support': typeof SupportRoute
+  '/videos/$videoTitle': typeof VideosVideoTitleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/convert': typeof ConvertRoute
   '/support': typeof SupportRoute
+  '/videos/$videoTitle': typeof VideosVideoTitleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/convert': typeof ConvertRoute
   '/support': typeof SupportRoute
+  '/videos/$videoTitle': typeof VideosVideoTitleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/convert' | '/support'
+  fullPaths: '/' | '/convert' | '/support' | '/videos/$videoTitle'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/convert' | '/support'
-  id: '__root__' | '/' | '/convert' | '/support'
+  to: '/' | '/convert' | '/support' | '/videos/$videoTitle'
+  id: '__root__' | '/' | '/convert' | '/support' | '/videos/$videoTitle'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConvertRoute: typeof ConvertRoute
   SupportRoute: typeof SupportRoute
+  VideosVideoTitleRoute: typeof VideosVideoTitleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/videos/$videoTitle': {
+      id: '/videos/$videoTitle'
+      path: '/videos/$videoTitle'
+      fullPath: '/videos/$videoTitle'
+      preLoaderRoute: typeof VideosVideoTitleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConvertRoute: ConvertRoute,
   SupportRoute: SupportRoute,
+  VideosVideoTitleRoute: VideosVideoTitleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

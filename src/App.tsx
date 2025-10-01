@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
+import '@vidstack/react/player/styles/base.css';
 import { Converter } from "./components/forms";
 
 function App() {

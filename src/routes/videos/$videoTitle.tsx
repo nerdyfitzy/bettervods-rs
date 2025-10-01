@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { TimestampForm } from '@/components/forms';
 import { useEffect, useRef, useState } from 'react';
 import { MediaPlayerInstance } from '@vidstack/react';
-import { useMutationState, useQuery } from '@tanstack/react-query';
+import { useMutationState } from '@tanstack/react-query';
 import z from 'zod';
 
 export const Route = createFileRoute('/videos/$videoTitle')({

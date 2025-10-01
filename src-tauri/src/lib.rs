@@ -9,6 +9,7 @@ use std::process::{Command, Stdio};
 use std::{collections::HashMap, sync::Mutex};
 use std::{fs, io};
 use tauri::{AppHandle, Emitter, Manager, State};
+use tauri_plugin_updater::UpdaterExt;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -177,11 +178,36 @@ fn create_vods_dir() {
     }
 }
 
+// async fn update(app: tauri::AppHandle) -> tauri_plugin_updater::Result<()> {
+//     if let Some(update) = app.updater()?.check().await? {
+//         let mut downloaded = 0;
+//
+//         // alternatively we could also call update.download() and update.install() separately
+//         update
+//             .download_and_install(
+//                 |chunk_length, content_length| {
+//                     downloaded += chunk_length;
+//                     println!("downloaded {downloaded} from {content_length:?}");
+//                 },
+//                 || {
+//                     println!("download finished");
+//                 },
+//             )
+//             .await?;
+//
+//         println!("update installed");
+//         app.restart();
+//     }
+//
+//     Ok(())
+// }
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     create_vods_dir();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             app.manage(Mutex::new(AppState::default()));
             Ok(())

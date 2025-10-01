@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
     MediaPlayer,
     MediaPlayerInstance,
     MediaProvider,
     Poster,
+    useMediaRemote,
     useStore,
 } from "@vidstack/react";
 import {
@@ -11,6 +12,7 @@ import {
     defaultLayoutIcons,
 } from "@vidstack/react/player/layouts/default";
 import { convertFileSrc } from "@tauri-apps/api/core";
+import { useMutationState } from "@tanstack/react-query";
 
 
 function VideoPlayer({ link, name }: { link: string; name: string }) {
@@ -18,6 +20,21 @@ function VideoPlayer({ link, name }: { link: string; name: string }) {
         { currentTime } = useStore(MediaPlayerInstance, ref);
 
     console.log(convertFileSrc(link))
+
+    const variables = useMutationState({
+        filters: {
+            mutationKey: ['seek'],
+            status: 'success'
+        },
+        select: (mutation) => mutation.state.data
+    })
+
+    useEffect(() => {
+        const latestTime = variables[variables.length - 1];
+
+        ref.current?.remoteControl.seek(latestTime as number);
+    }, [variables])
+
     return (
         <MediaPlayer
             ref={ref}

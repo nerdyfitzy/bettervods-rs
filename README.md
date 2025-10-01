@@ -5,7 +5,7 @@ Twitch vods are really bad for vod reviewing, so I wrote this to give them a mor
 This originally started as a website but doing file conversion in the browser is horrible, so now its a desktop app.
 
 ## Installation
-1. Downlad [ffmpeg](https://ffmpeg.org/download.html). This **WILL NOT WORK WITHOUT IT**
+1. Download and install [ffmpeg](https://ffmpeg.org/download.html). This **WILL NOT WORK WITHOUT IT**
 2. Download and install the latest release [here](https://github.com/nerdyfitzy/bettervods-rs/releases/tag/latest)
 
 ## Information and known bugs

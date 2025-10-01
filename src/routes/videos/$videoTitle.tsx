@@ -8,7 +8,6 @@ import { invoke } from '@tauri-apps/api/core';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import Timestamp from '@/components/timestamp';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TimestampForm } from '@/components/forms';
 import { useRef } from 'react';
@@ -61,11 +60,9 @@ function RouteComponent() {
                     </Popover>
                 </CardTitle>
                 <CardContent className="flex flex-col gap-2 justify-start items-start">
-                    <ScrollArea className='w-full h-full pr-8'>
-                        {timestamps ? timestamps.map(ts =>
-                            <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
-                        ) : <EmptyList />}
-                    </ScrollArea>
+                    {timestamps ? timestamps.map(ts =>
+                        <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
+                    ) : <EmptyList />}
                 </CardContent>
             </Card>
         </section>

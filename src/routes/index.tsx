@@ -4,6 +4,7 @@ import Video from '@/components/video-card'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { invoke } from '@tauri-apps/api/core'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export const Route = createFileRoute('/')({
     component: RouteComponent,
@@ -22,18 +23,22 @@ function RouteComponent() {
 
     return (
         <>
-            <section className='flex flex-row flex-wrap gap-y-4 gap-x-2 justify-start items-start h-full w-full p-8 '>
-                {isLoading ?
-                    <>
-                        <Skeleton className='w-1/2 h-5/12 rounded-xl' />
-                        <Skeleton className='w-1/2 h-5/12 rounded-xl' />
-                    </>
-                    /* @ts-ignore */
-                    : data.length === 0 ? <EmptyList />
-                        : data ?
+            <section className=' h-full w-full p-8 '>
+                <ScrollArea className='h-11/12 '>
+                    <div className='w-full flex-row flex flex-wrap gap-y-4 gap-x-8 justify-start items-start'>
+                        {isLoading ?
+                            <>
+                                <Skeleton className='w-1/2 h-5/12 rounded-xl' />
+                                <Skeleton className='w-1/2 h-5/12 rounded-xl' />
+                            </>
                             /* @ts-ignore */
-                            data.map(item => <Video title={new TextDecoder().decode(Uint8Array.from(item.Windows))} />)
-                            : <p>err</p>}
+                            : data.length === 0 ? <EmptyList />
+                                : data ?
+                                    /* @ts-ignore */
+                                    data.map(item => <Video title={new TextDecoder().decode(Uint8Array.from(item.Windows))} />)
+                                    : <p>err</p>}
+                    </div>
+                </ScrollArea>
 
             </section>
         </>

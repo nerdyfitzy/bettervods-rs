@@ -13,29 +13,29 @@ function Video({ title }: { title: string; id?: number }) {
     if (isError) return null;
 
     return (
-        <Link to='/videos/$videoTitle' params={{ videoTitle: title }}>
-            <Card className="relative min-h-fit border-2 bg-card p-8 shadow-md drop-shadow-xl hover:bg-slate-800">
-                <CardContent className="flex flex-col gap-4">
-                    <MediaPlayer
-                        keyTarget="document"
-                        src={convertFileSrc(data as string)}
-                        viewType="video"
-                        logLevel="warn"
-                        playsInline
-                        className="w-44 h-32"
-                        title={title}
-                    >
-                        <MediaProvider>
-                            <Poster className="vds-poster" />
-                        </MediaProvider>
-                    </MediaPlayer>
+        // <Link className="w-16" to='/videos/$videoTitle' params={{ videoTitle: title }}>
+        <Card className="max-w-fit min-h-fit border-2 bg-card p-8 shadow-md drop-shadow-xl hover:bg-slate-800">
+            <CardContent className="flex flex-col gap-4">
+                <MediaPlayer
+                    keyTarget="document"
+                    src={convertFileSrc(data as string)}
+                    viewType="video"
+                    logLevel="warn"
+                    playsInline
+                    className="w-44 h-32"
+                    title={title}
+                >
+                    <MediaProvider>
+                        <Poster className="vds-poster" />
+                    </MediaProvider>
+                </MediaPlayer>
 
-                    <div className="flex flex-row justify-start">
-                        <p className="text-lg font-bold">{title}</p>
-                    </div>
-                </CardContent>
-            </Card>
-        </Link>
+                <div className="flex flex-row justify-start">
+                    <p className="text-lg font-bold">{title}</p>
+                </div>
+            </CardContent>
+        </Card>
+        // </Link>
     );
 }
 

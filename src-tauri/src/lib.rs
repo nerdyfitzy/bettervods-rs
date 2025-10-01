@@ -31,6 +31,7 @@ fn create_timestamp(
     name: &str,
     time_in_seconds: i32,
 ) -> Option<()> {
+    println!("Creating");
     let file_name_copy = file_name.to_owned();
     let name_copy = name.to_owned();
     let name_two = name.to_owned();

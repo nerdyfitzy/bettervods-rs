@@ -36,7 +36,9 @@ function RouteComponent() {
     const { videoTitle } = Route.useParams();
     const timeRef = useRef<MediaPlayerInstance>(null);
 
-    listen<Timestamp[]>('new-timestamp', (event) => setTimestamps(event.payload))
+    listen<Timestamp[]>('new-timestamp', (event) => setTimestamps([...timestamps, event.payload]))
+
+    console.log(timestamps)
 
     return (
         <section className="flex w-full flex-row items-center justify-center gap-4 p-4">
@@ -57,7 +59,9 @@ function RouteComponent() {
                     </Popover>
                 </CardTitle>
                 <CardContent className="flex flex-col gap-2 justify-start items-start">
-                    {timestamps.map(ts => <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />)}
+                    {timestamps.length > 0 ? timestamps.map(ts =>
+                        <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
+                    ) : <p>empty</p>}
                 </CardContent>
             </Card>
         </section>

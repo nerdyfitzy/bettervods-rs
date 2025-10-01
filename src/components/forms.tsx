@@ -130,15 +130,16 @@ export function TimestampForm({ timeRef, fileName }: { fileName: string; timeRef
 
     const mutation = useMutation({
         mutationKey: ['add_timestamp'],
-        mutationFn: ({ name, time_in_seconds }: { name: string; time_in_seconds: number }) =>
-            invoke('create_timestamp', { file_name: fileName, name, time_in_seconds })
+        mutationFn: (data: { name: string; time_in_seconds: number }) => {
+            const { name, time_in_seconds } = data;
+            console.log(name, time_in_seconds, fileName)
 
+            return invoke('create_timestamp', { fileName, name, timeInSeconds: Math.floor(time_in_seconds) })
+        },
+        onError: (e) => console.log(e)
     })
 
     function onSubmit(values: z.infer<typeof timestampFormSchema>) {
-        console.log(values.name);
-        console.log(timeRef.current?.state.currentTime)
-
         mutation.mutate({ name: values.name, time_in_seconds: timeRef.current?.state.currentTime as number })
     }
     return (

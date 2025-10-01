@@ -8,7 +8,6 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "updater:default",
     {
       "identifier": "http:default",
       "allow": [
@@ -19,12 +18,12 @@
     },
     "fs:allow-appcache-read-recursive",
     {
-        "identifier": "opener:allow-open-path",
-        "allow": [
-            {
-                "path": "$APPCACHE/vods"
-            }
-        ]
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        {
+          "path": "$APPCACHE/vods"
+        }
+      ]
     }
   ]
 }

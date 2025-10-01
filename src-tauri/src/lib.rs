@@ -8,8 +8,7 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 use std::{collections::HashMap, sync::Mutex};
 use std::{fs, io};
-use tauri::{AppHandle, Emitter, Manager, State};
-use tauri_plugin_updater::UpdaterExt;
+use tauri::{Builder, Manager, State};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -206,8 +205,7 @@ fn create_vods_dir() {
 pub fn run() {
     create_vods_dir();
 
-    tauri::Builder::default()
-        .plugin(tauri_plugin_updater::Builder::new().build())
+    Builder::default()
         .setup(|app| {
             app.manage(Mutex::new(AppState::default()));
             Ok(())

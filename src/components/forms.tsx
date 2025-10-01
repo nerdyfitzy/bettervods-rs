@@ -140,7 +140,9 @@ export function TimestampForm({ timeRef, fileName }: { fileName: string; timeRef
         onError: (e) => console.log(e),
         onSuccess: () => {
             console.log('settled')
-            queryClient.invalidateQueries({ queryKey: ['timestamps'] })
+            queryClient.invalidateQueries({
+                queryKey: ['timestamps']
+            })
         }
     })
 

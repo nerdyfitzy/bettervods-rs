@@ -10,15 +10,21 @@ import Timestamp from '@/components/timestamp';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TimestampForm } from '@/components/forms';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MediaPlayerInstance } from '@vidstack/react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutationState, useQuery } from '@tanstack/react-query';
 import z from 'zod';
 
 export const Route = createFileRoute('/videos/$videoTitle')({
     component: RouteComponent,
     loader: async ({ params }) => {
-        return invoke('get_full_path', { name: params.videoTitle })
+        const pathPromise = invoke('get_full_path', { name: params.videoTitle })
+        const timestampPromise = invoke('get_all_timestamps_for_video', { name: params.videoTitle })
+        const [path, initTimestamps] = await Promise.all([
+            pathPromise, timestampPromise
+        ])
+
+        return [path, initTimestamps]
     }
 })
 
@@ -29,15 +35,27 @@ const timestampSchema = z.array(z.object({
 
 
 function RouteComponent() {
-    const { data } = useQuery({
-        queryKey: ['timestamps'],
-        queryFn: () => invoke('get_all_timestamps_for_video', { name: videoTitle }),
-    })
-    const loaderData = Route.useLoaderData()
+    const [path, initTimestamps] = Route.useLoaderData()
     const { videoTitle } = Route.useParams();
     const timeRef = useRef<MediaPlayerInstance>(null);
 
-    const timestamps = timestampSchema.parse(data);
+    const variables = useMutationState({
+        filters: {
+            mutationKey: ['add_timestamp']
+        },
+        select: (mutation) => mutation.state.variables
+    })
+
+    //@ts-ignore
+    const [timestamps, setTimestamps] = useState<z.infer<typeof timestampSchema>>(initTimestamps)
+
+    useEffect(() => {
+        if (variables.length > 0) {
+            //@ts-ignore
+            setTimestamps([variables[variables.length - 1], ...timestamps])
+        }
+    }, [variables])
+
 
     console.log(timestamps)
 
@@ -45,7 +63,7 @@ function RouteComponent() {
         <section className="flex w-full flex-row items-center justify-center gap-4 p-4">
             <div className="w-2/3">
                 <h1 className="mb-2 text-3xl font-bold">{videoTitle}</h1>
-                <VideoPlayer timeRef={timeRef} link={loaderData as string} name={videoTitle} key={videoTitle} />
+                <VideoPlayer timeRef={timeRef} link={path as string} name={videoTitle} key={videoTitle} />
             </div>
             <Card className="w-1/3 h-full px-8 py-2 rounded-xs">
                 <CardTitle className="mb-4 text-start text-2xl flex flex-row justify-between items-center">

@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TwitchPlayer } from "./twitch-player";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { getVod } from "@/lib/get-twitch-url";
 import { Label } from "./ui/label";
 import { invoke } from "@tauri-apps/api/core";
@@ -121,6 +121,7 @@ export function Converter() {
 }
 
 export function TimestampForm({ timeRef, fileName }: { fileName: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
+    const queryClient = new QueryClient();
     const form = useForm<z.infer<typeof timestampFormSchema>>({
         resolver: zodResolver(timestampFormSchema),
         defaultValues: {
@@ -136,7 +137,11 @@ export function TimestampForm({ timeRef, fileName }: { fileName: string; timeRef
 
             return invoke('create_timestamp', { fileName, name, timeInSeconds: Math.floor(time_in_seconds) })
         },
-        onError: (e) => console.log(e)
+        onError: (e) => console.log(e),
+        onSuccess: () => {
+            console.log('settled')
+            queryClient.invalidateQueries({ queryKey: ['timestamps'] })
+        }
     })
 
     function onSubmit(values: z.infer<typeof timestampFormSchema>) {

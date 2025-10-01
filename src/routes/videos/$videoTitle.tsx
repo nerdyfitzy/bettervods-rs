@@ -8,11 +8,13 @@ import { invoke } from '@tauri-apps/api/core';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import Timestamp from '@/components/timestamp';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TimestampForm } from '@/components/forms';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { MediaPlayerInstance } from '@vidstack/react';
-import { listen } from '@tauri-apps/api/event'
+import { useQuery } from '@tanstack/react-query';
+import z from 'zod';
 
 export const Route = createFileRoute('/videos/$videoTitle')({
     component: RouteComponent,
@@ -21,22 +23,22 @@ export const Route = createFileRoute('/videos/$videoTitle')({
     }
 })
 
-type Timestamp = {
-    name: string;
-    time_in_seconds: number;
-}
+const timestampSchema = z.array(z.object({
+    name: z.string(),
+    time_in_seconds: z.number()
+})).or(z.undefined())
 
 
 function RouteComponent() {
-    //i wanna switch to trpc and rewrite this so its way cleaner and easier to follow.
-    //for now this is what is written and it is fine and it works
-
-    const [timestamps, setTimestamps] = useState<Timestamp[]>([])
+    const { data } = useQuery({
+        queryKey: ['timestamps'],
+        queryFn: () => invoke('get_all_timestamps_for_video', { name: videoTitle }),
+    })
     const loaderData = Route.useLoaderData()
     const { videoTitle } = Route.useParams();
     const timeRef = useRef<MediaPlayerInstance>(null);
 
-    listen<Timestamp[]>('new-timestamp', (event) => setTimestamps([...timestamps, event.payload]))
+    const timestamps = timestampSchema.parse(data);
 
     console.log(timestamps)
 
@@ -59,11 +61,21 @@ function RouteComponent() {
                     </Popover>
                 </CardTitle>
                 <CardContent className="flex flex-col gap-2 justify-start items-start">
-                    {timestamps.length > 0 ? timestamps.map(ts =>
-                        <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
-                    ) : <p>empty</p>}
+                    <ScrollArea className='w-full h-full pr-8'>
+                        {timestamps ? timestamps.map(ts =>
+                            <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
+                        ) : <EmptyList />}
+                    </ScrollArea>
                 </CardContent>
             </Card>
         </section>
+    );
+}
+
+function EmptyList() {
+    return (
+        <div className="flex w-full flex-col self-center justify-self-center items-center justify-center gap-4 p-8 text-center">
+            <p className="text-gray-300">No timestamps yet</p>
+        </div>
     );
 }

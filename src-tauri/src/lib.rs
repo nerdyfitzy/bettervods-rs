@@ -25,7 +25,6 @@ struct AppState {
 
 #[tauri::command]
 fn create_timestamp(
-    app: AppHandle,
     state: State<'_, Mutex<AppState>>,
     file_name: &str,
     name: &str,
@@ -34,7 +33,6 @@ fn create_timestamp(
     println!("Creating");
     let file_name_copy = file_name.to_owned();
     let name_copy = name.to_owned();
-    let name_two = name.to_owned();
     let mut state = state.lock().unwrap();
     state
         .timestamps
@@ -51,18 +49,18 @@ fn create_timestamp(
         })
     });
 
-    println!("Created, emitting");
-
-    app.emit(
-        "new-timestamp",
-        Timestamp {
-            name: name_two,
-            time_in_seconds,
-        },
-    )
-    .unwrap();
-
     Some(())
+}
+
+#[tauri::command]
+fn get_all_timestamps_for_video(state: State<'_, Mutex<AppState>>, name: String) -> Vec<Timestamp> {
+    let state = state.lock().unwrap();
+
+    let Some(timestamp) = state.timestamps.get(&name) else {
+        return vec![];
+    };
+
+    timestamp.clone()
 }
 
 #[tauri::command]
@@ -193,7 +191,8 @@ pub fn run() {
             is_name_available,
             get_all_vods,
             get_full_path,
-            create_timestamp
+            create_timestamp,
+            get_all_timestamps_for_video
         ])
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())

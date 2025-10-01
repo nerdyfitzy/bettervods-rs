@@ -22,7 +22,7 @@ function Video({ title }: { title: string; id?: number }) {
                         viewType="video"
                         logLevel="warn"
                         playsInline
-                        className="w-48 h-32"
+                        className="w-44 h-32"
                         title={title}
                     >
                         <MediaProvider>

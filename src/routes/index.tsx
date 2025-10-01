@@ -22,7 +22,7 @@ function RouteComponent() {
 
     return (
         <>
-            <section className='flex flex-row gap-y-4 gap-x-2 justify-start items-start h-full w-full p-8 '>
+            <section className='flex flex-row flex-wrap gap-y-4 gap-x-2 justify-start items-start h-full w-full p-8 '>
                 {isLoading ?
                     <>
                         <Skeleton className='w-1/2 h-5/12 rounded-xl' />

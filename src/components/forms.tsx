@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     Form,
     FormControl,
@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { getVod } from "@/lib/get-twitch-url";
 import { Label } from "./ui/label";
 import { invoke } from "@tauri-apps/api/core";
+import { MediaPlayerInstance } from "@vidstack/react";
 
 const converterFormSchema = z.object({
     url: z
@@ -28,6 +29,10 @@ const converterFormSchema = z.object({
         return response
     }, { message: 'Name is already taken' })
 });
+
+const timestampFormSchema = z.object({
+    name: z.string().min(1)
+})
 
 export function Converter() {
     const form = useForm<z.infer<typeof converterFormSchema>>({
@@ -111,6 +116,58 @@ export function Converter() {
                         : <TwitchPlayer vod={vodId as string} />
                 }
             </section>
+        </>
+    );
+}
+
+export function TimestampForm({ timeRef, fileName }: { fileName: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
+    const form = useForm<z.infer<typeof timestampFormSchema>>({
+        resolver: zodResolver(timestampFormSchema),
+        defaultValues: {
+            name: "",
+        },
+    });
+
+    const mutation = useMutation({
+        mutationKey: ['add_timestamp'],
+        mutationFn: ({ name, time_in_seconds }: { name: string; time_in_seconds: number }) =>
+            invoke('create_timestamp', { file_name: fileName, name, time_in_seconds })
+
+    })
+
+    function onSubmit(values: z.infer<typeof timestampFormSchema>) {
+        console.log(values.name);
+        console.log(timeRef.current?.state.currentTime)
+
+        mutation.mutate({ name: values.name, time_in_seconds: timeRef.current?.state.currentTime as number })
+    }
+    return (
+        <>
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4 drop-shadow-lg"
+                >
+                    <h2 className="text-md font-bold">Enter timestamp name</h2>
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Bad nair"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <Button type="submit">Submit</Button>
+                </form>
+            </Form>
         </>
     );
 }

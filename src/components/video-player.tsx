@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
     MediaPlayer,
     MediaPlayerInstance,
     MediaProvider,
     Poster,
-    useMediaRemote,
     useStore,
 } from "@vidstack/react";
 import {
@@ -15,9 +14,8 @@ import { convertFileSrc } from "@tauri-apps/api/core";
 import { useMutationState } from "@tanstack/react-query";
 
 
-function VideoPlayer({ link, name }: { link: string; name: string }) {
-    const ref = useRef<MediaPlayerInstance>(null),
-        { currentTime } = useStore(MediaPlayerInstance, ref);
+function VideoPlayer({ link, name, timeRef }: { link: string; name: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
+    const { currentTime } = useStore(MediaPlayerInstance, timeRef);
 
     console.log(convertFileSrc(link))
 
@@ -32,12 +30,12 @@ function VideoPlayer({ link, name }: { link: string; name: string }) {
     useEffect(() => {
         const latestTime = variables[variables.length - 1];
 
-        ref.current?.remoteControl.seek(latestTime as number);
+        timeRef.current?.remoteControl.seek(latestTime as number);
     }, [variables])
 
     return (
         <MediaPlayer
-            ref={ref}
+            ref={timeRef}
             keyTarget="document"
             crossOrigin="anonymous"
             keyShortcuts={{

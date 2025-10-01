@@ -1,13 +1,68 @@
 extern crate directories;
 use directories::BaseDirs;
+use serde::{Deserialize, Serialize};
 
 use std::ffi::OsString;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 use std::process::{Command, Stdio};
+use std::{collections::HashMap, sync::Mutex};
 use std::{fs, io};
+use tauri::{AppHandle, Emitter, Manager, State};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+
+#[derive(Deserialize, Serialize, Clone)]
+struct Timestamp {
+    name: String,
+    time_in_seconds: i32,
+}
+
+#[derive(Default)]
+struct AppState {
+    timestamps: HashMap<String, Vec<Timestamp>>,
+}
+
+#[tauri::command]
+fn create_timestamp(
+    app: AppHandle,
+    state: State<'_, Mutex<AppState>>,
+    file_name: &str,
+    name: &str,
+    time_in_seconds: i32,
+) -> Option<()> {
+    let file_name_copy = file_name.to_owned();
+    let name_copy = name.to_owned();
+    let name_two = name.to_owned();
+    let mut state = state.lock().unwrap();
+    state
+        .timestamps
+        .entry(file_name.to_owned())
+        .or_insert(vec![Timestamp {
+            name: name.to_owned(),
+            time_in_seconds,
+        }]);
+
+    state.timestamps.entry(file_name_copy).and_modify(|item| {
+        item.push(Timestamp {
+            name: name_copy,
+            time_in_seconds,
+        })
+    });
+
+    println!("Created, emitting");
+
+    app.emit(
+        "new-timestamp",
+        Timestamp {
+            name: name_two,
+            time_in_seconds,
+        },
+    )
+    .unwrap();
+
+    Some(())
+}
 
 #[tauri::command]
 fn get_all_vods() -> Vec<OsString> {
@@ -128,15 +183,20 @@ pub fn run() {
     create_vods_dir();
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_http::init())
-        .plugin(tauri_plugin_opener::init())
+        .setup(|app| {
+            app.manage(Mutex::new(AppState::default()));
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             convert_from_m3u8,
             is_name_available,
             get_all_vods,
-            get_full_path
+            get_full_path,
+            create_timestamp
         ])
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_opener::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

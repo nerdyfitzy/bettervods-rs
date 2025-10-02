@@ -10,9 +10,7 @@ export const Route = createFileRoute('/')({
 })
 
 function RouteComponent() {
-
     const { data, isLoading } = useGetAllVodsQuery();
-
     return (
         <>
             <section className=' h-full w-full p-8 '>

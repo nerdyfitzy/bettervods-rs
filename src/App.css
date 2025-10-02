@@ -41,7 +41,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-
 :root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);
@@ -110,7 +109,6 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.541 0.281 293.009);
 }
-
 
 @layer base {
   * {

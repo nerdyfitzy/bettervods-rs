@@ -2,16 +2,15 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { z } from 'zod';
 import { useNavigate } from '@tanstack/react-router';
 import Spinner from './ui/spinner';
 import { useTwitchPlayer } from '@/hooks/useTwitchPlayer';
 import { useM3u8State } from '@/hooks/useM3u8State';
 import { useConvertMutation } from '@/hooks/useConvertMutation';
+import { m3u8Schema } from '@/lib/schema';
 
 dayjs.extend(duration)
 
-const m3u8Schema = z.array(z.string()).length(2);
 
 export const TwitchPlayer = ({ vod }: { vod: string }) => {
     const player = useTwitchPlayer(vod);

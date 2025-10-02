@@ -7,8 +7,8 @@ import { invoke } from '@tauri-apps/api/core';
 import { ResizablePanel, ResizableHandle, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useRef } from 'react';
 import { MediaPlayerInstance } from '@vidstack/react';
-import z from 'zod';
 import TimestampCard from '@/components/timestamp';
+import { timestampSchema } from '@/lib/schema';
 
 export const Route = createFileRoute('/videos/$videoTitle')({
     component: RouteComponent,
@@ -22,11 +22,6 @@ export const Route = createFileRoute('/videos/$videoTitle')({
         return [path, initTimestamps]
     }
 })
-
-const timestampSchema = z.array(z.object({
-    name: z.string(),
-    time_in_seconds: z.number()
-})).or(z.undefined())
 
 
 function RouteComponent() {

@@ -17,22 +17,7 @@ import { getVod } from "@/lib/get-twitch-url";
 import { Label } from "./ui/label";
 import { invoke } from "@tauri-apps/api/core";
 import { MediaPlayerInstance } from "@vidstack/react";
-
-const converterFormSchema = z.object({
-    url: z
-        .string()
-        .url()
-        .includes("twitch.tv/videos/", { message: "Invalid URL" }),
-    name: z.string().min(1).refine(async (val) => {
-        const response = await invoke('is_name_available', { name: val });
-        console.log(response)
-        return response
-    }, { message: 'Name is already taken' })
-});
-
-const timestampFormSchema = z.object({
-    name: z.string().min(1)
-})
+import { converterFormSchema, timestampFormSchema } from "@/lib/schema";
 
 export function Converter() {
     const form = useForm<z.infer<typeof converterFormSchema>>({

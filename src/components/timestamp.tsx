@@ -12,11 +12,8 @@ import React, { useEffect, useState } from "react";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { z } from 'zod'
 import { Plus } from "lucide-react";
+import { timestampSchema } from "@/lib/schema";
 
-const timestampSchema = z.array(z.object({
-    name: z.string(),
-    time_in_seconds: z.number()
-})).or(z.undefined())
 
 function TimestampCard({ videoTitle, timeRef, initTimestamps }: { initTimestamps: z.infer<typeof timestampSchema>; videoTitle: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
     const variables = useMutationState({

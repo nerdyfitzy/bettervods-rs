@@ -14,12 +14,13 @@ import { convertFileSrc } from "@tauri-apps/api/core";
 import { useSeek } from "@/hooks/useSeek";
 
 
-function VideoPlayer({ link, name, timeRef }: { link: string; name: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
+function VideoPlayer({ link, name, timeRef, className }: { className?: string; link: string; name: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
     const { currentTime } = useStore(MediaPlayerInstance, timeRef);
     useSeek(timeRef);
 
     return (
         <MediaPlayer
+            className={className}
             ref={timeRef}
             keyTarget="document"
             crossOrigin="anonymous"

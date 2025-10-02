@@ -57,29 +57,29 @@ function RouteComponent() {
     }, [variables])
 
     return (
-        <section className="flex w-full flex-row items-center justify-center gap-4 p-4">
-            <div className="w-2/3">
-                <h1 className="mb-2 text-3xl font-bold">{videoTitle}</h1>
+        <section className="w-full ">
+            <h1 className="px-4 mb-2 text-3xl font-bold">{videoTitle}</h1>
+            <div className="w-full flex flex-row items-center justify-center gap-4 p-4">
                 <VideoPlayer timeRef={timeRef} link={path as string} name={videoTitle} key={videoTitle} />
+                <Card className="w-1/3 h-90 px-8 py-2 rounded-xs">
+                    <CardTitle className="mb-4 text-start text-2xl flex flex-row justify-between items-center">
+                        Timestamps
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button size="icon" variant="ghost" className='rounded-full border' asChild><Plus /></Button>
+                            </PopoverTrigger>
+                            <PopoverContent className='dark'>
+                                <TimestampForm timeRef={timeRef} fileName={videoTitle} />
+                            </PopoverContent>
+                        </Popover>
+                    </CardTitle>
+                    <CardContent className="flex flex-col gap-2 justify-start items-start">
+                        {timestamps?.length > 0 ? timestamps.map(ts =>
+                            <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
+                        ) : <EmptyList />}
+                    </CardContent>
+                </Card>
             </div>
-            <Card className="w-1/3 h-full px-8 py-2 rounded-xs">
-                <CardTitle className="mb-4 text-start text-2xl flex flex-row justify-between items-center">
-                    Timestamps
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button size="icon" variant="ghost" className='rounded-full border' asChild><Plus /></Button>
-                        </PopoverTrigger>
-                        <PopoverContent className='dark'>
-                            <TimestampForm timeRef={timeRef} fileName={videoTitle} />
-                        </PopoverContent>
-                    </Popover>
-                </CardTitle>
-                <CardContent className="flex flex-col gap-2 justify-start items-start">
-                    {timestamps ? timestamps.map(ts =>
-                        <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
-                    ) : <EmptyList />}
-                </CardContent>
-            </Card>
         </section>
     );
 }
@@ -87,7 +87,7 @@ function RouteComponent() {
 function EmptyList() {
     return (
         <div className="flex w-full flex-col self-center justify-self-center items-center justify-center gap-4 p-8 text-center">
-            <p className="text-gray-300">No timestamps yet</p>
+            <p className="text-gray-300 text-nowrap">No timestamps yet</p>
         </div>
     );
 }

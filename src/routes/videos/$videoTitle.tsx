@@ -56,9 +56,6 @@ function RouteComponent() {
         }
     }, [variables])
 
-
-    console.log(timestamps)
-
     return (
         <section className="flex w-full flex-row items-center justify-center gap-4 p-4">
             <div className="w-2/3">

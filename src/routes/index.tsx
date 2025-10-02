@@ -1,21 +1,17 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import Video from '@/components/video-card'
-import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { invoke } from '@tauri-apps/api/core'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useGetAllVodsQuery } from '@/hooks/useGetAllVodsQuery'
 
 export const Route = createFileRoute('/')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
-    const { data, isLoading } = useQuery({
-        queryKey: ['vods'],
-        queryFn: () => invoke('get_all_vods')
-    })
 
+    const { data, isLoading } = useGetAllVodsQuery();
 
     return (
         <>

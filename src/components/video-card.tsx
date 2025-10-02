@@ -1,14 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { useFullPathQuery } from "@/hooks/useFullPathQuery";
 import { Link } from "@tanstack/react-router";
-import { convertFileSrc, invoke } from "@tauri-apps/api/core";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import { MediaPlayer, MediaProvider, Poster } from "@vidstack/react";
 
 function Video({ title }: { title: string; id?: number }) {
-    const { data, isError } = useQuery({
-        queryKey: ['full_path', title],
-        queryFn: () => invoke('get_full_path', { name: title })
-    })
+    const { data, isError } = useFullPathQuery(title)
 
     if (isError) return null;
 

@@ -14,6 +14,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
     useEffect(() => {
+        //@ts-ignore
         checkForAppUpdates().then((_) => console.log('done'));
     }, [])
     return (

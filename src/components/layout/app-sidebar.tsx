@@ -51,8 +51,8 @@ function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter className="flex flex-col items-center">
-                <Button onClick={open} variant="secondary" className="absolute bottom-8 w-48">
+            <SidebarFooter className="flex flex-col items-center ">
+                <Button onClick={open} variant="secondary" className="absolute bottom-10 w-48">
                     Open VOD folder
                 </Button>
             </SidebarFooter>

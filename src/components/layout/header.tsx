@@ -8,7 +8,7 @@ function Header() {
         // openPath('C:\\Users\\kaylee\\AppData\\Local\\bettervods\\vods')
         invoke('get_full_path', { name: ' ' })
             .then((name) => {
-                console.log(name)
+                //@ts-ignore
                 openPath(name.trim())
             })
     }

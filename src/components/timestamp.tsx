@@ -49,6 +49,7 @@ function TimestampCard({ videoTitle, timeRef, initTimestamps }: { initTimestamps
             <CardContent className='overflow-y-hidden px-0'>
                 <ScrollArea className='w-full h-full pr-4'>
                     <div className="w-full flex flex-col gap-2 justify-start items-start">
+                        {/* @ts-ignore */}
                         {timestamps?.length > 0 ? timestamps.map(ts =>
                             <Timestamp key={ts.name} title={ts.name} timeInSeconds={ts.time_in_seconds} />
                         ) : <EmptyList />}

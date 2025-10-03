@@ -4,6 +4,7 @@ import ReactQueryProvider from '@/lib/Providers'
 import Footer from '@/components/layout/footer'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/layout/app-sidebar'
+import { Toaster } from 'sonner'
 
 export const Route = createRootRoute({
     component: RootComponent,
@@ -18,8 +19,9 @@ function RootComponent() {
                     <main className="dark bg-background text-white h-screen w-screen flex flex-row justify-start items-center">
                         <SidebarTrigger />
                         <Outlet />
-                        <Footer />
                     </main>
+                    <Footer />
+                    <Toaster />
                 </SidebarProvider>
             </ReactQueryProvider>
         </React.Fragment>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
     MediaPlayer,
     MediaPlayerInstance,
@@ -11,30 +11,16 @@ import {
     defaultLayoutIcons,
 } from "@vidstack/react/player/layouts/default";
 import { convertFileSrc } from "@tauri-apps/api/core";
-import { useMutationState } from "@tanstack/react-query";
+import { useSeek } from "@/hooks/useSeek";
 
 
-function VideoPlayer({ link, name, timeRef }: { link: string; name: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
+function VideoPlayer({ link, name, timeRef, className }: { className?: string; link: string; name: string; timeRef: React.RefObject<MediaPlayerInstance | null> }) {
     const { currentTime } = useStore(MediaPlayerInstance, timeRef);
-
-    console.log(convertFileSrc(link))
-
-    const variables = useMutationState({
-        filters: {
-            mutationKey: ['seek'],
-            status: 'success'
-        },
-        select: (mutation) => mutation.state.data
-    })
-
-    useEffect(() => {
-        const latestTime = variables[variables.length - 1];
-
-        timeRef.current?.remoteControl.seek(latestTime as number);
-    }, [variables])
+    useSeek(timeRef);
 
     return (
         <MediaPlayer
+            className={className}
             ref={timeRef}
             keyTarget="document"
             crossOrigin="anonymous"
@@ -65,10 +51,6 @@ function VideoPlayer({ link, name, timeRef }: { link: string; name: string; time
             </MediaProvider>
             <DefaultVideoLayout icons={defaultLayoutIcons} />
         </MediaPlayer>
-
-        // <video width="750" height="500" controls>
-        //     <source src={convertFileSrc(link)} type="video/mp4" />
-        // </video>
     );
 }
 

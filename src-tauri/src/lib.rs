@@ -166,17 +166,25 @@ fn convert_from_m3u8(url: &str, name: &str, start_time: &str, end_time: &str) ->
     }
 }
 
-fn create_vods_dir() {
+fn create_vods_dir() -> bool {
     if let Some(base_dirs) = BaseDirs::new() {
         let local_dir = base_dirs.cache_dir();
 
-        let vods_dir = local_dir.join(Path::new("bettervods\\vods"));
+        let vods_dir = local_dir.join(Path::new("bettervods"));
 
         if !vods_dir.exists() {
-            let _ = fs::create_dir(vods_dir);
+            let _ = fs::create_dir(&vods_dir);
+
+            let final_dir = vods_dir.join(Path::new("vods"));
+
+            let _ = fs::create_dir(final_dir);
             println!("created dir");
+
+            return true;
         }
     }
+
+    return false;
 }
 
 // async fn update(app: tauri::AppHandle) -> tauri_plugin_updater::Result<()> {
@@ -205,8 +213,7 @@ fn create_vods_dir() {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    create_vods_dir();
-
+    let _ = create_vods_dir();
     tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_dialog::init())

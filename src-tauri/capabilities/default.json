@@ -8,7 +8,6 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "updater:default",
     "dialog:default",
     "updater:default",
     "process:default",

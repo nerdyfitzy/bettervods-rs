@@ -1,16 +1,22 @@
 import * as React from 'react'
+import { useEffect } from 'react'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import ReactQueryProvider from '@/lib/Providers'
 import Footer from '@/components/layout/footer'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/layout/app-sidebar'
 import { Toaster } from 'sonner'
+import { checkForAppUpdates } from '@/updater'
 
 export const Route = createRootRoute({
     component: RootComponent,
 })
 
 function RootComponent() {
+    useEffect(() => {
+        //@ts-ignore
+        checkForAppUpdates().then((_) => console.log('done'));
+    }, [])
     return (
         <React.Fragment>
             <ReactQueryProvider>

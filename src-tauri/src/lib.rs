@@ -9,6 +9,7 @@ use std::process::{Command, Stdio};
 use std::{collections::HashMap, sync::Mutex};
 use std::{fs, io};
 use tauri::{Builder, Manager, State};
+use tauri_plugin_dialog;
 use tauri_plugin_updater::UpdaterExt;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/

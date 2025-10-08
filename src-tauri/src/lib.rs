@@ -4,12 +4,12 @@ use serde::{Deserialize, Serialize};
 
 use std::ffi::OsString;
 use std::fs::File;
-use std::io::{copy, stdout, BufRead, BufReader, BufWriter};
+use std::io::{BufRead, BufReader, BufWriter};
 use std::path::Path;
 use std::process::{Command, Stdio};
 use std::{collections::HashMap, sync::Mutex};
 use std::{fs, io};
-use tauri::{Builder, Manager, State};
+use tauri::{Manager, State};
 use tauri_plugin_dialog;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/

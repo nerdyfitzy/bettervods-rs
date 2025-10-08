@@ -9,6 +9,8 @@ import { useRef } from 'react';
 import { MediaPlayerInstance } from '@vidstack/react';
 import TimestampCard from '@/components/timestamp';
 import { timestampSchema } from '@/lib/schema';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export const Route = createFileRoute('/videos/$videoTitle')({
     component: RouteComponent,
@@ -26,16 +28,23 @@ export const Route = createFileRoute('/videos/$videoTitle')({
 
 function RouteComponent() {
     const [path, initTimestamps] = Route.useLoaderData()
+    const seekTimeRef = useRef<HTMLInputElement | null>(null);
     const { videoTitle } = Route.useParams();
     const timeRef = useRef<MediaPlayerInstance>(null);
     const parsedTimestamps = timestampSchema.parse(initTimestamps)
 
     return (
         <section className="w-full ">
-            <h1 className="px-4 mb-2 text-3xl font-bold">{videoTitle}</h1>
-            <ResizablePanelGroup className="w-full flex flex-row items-center justify-center gap-4 p-4" direction='horizontal'>
+            <div className='flex flex-row gap-4 justify-start'>
+                <h1 className="px-4 mb-2 text-3xl font-bold">{videoTitle}</h1>
+                <div className='w-fit flex flex-col gap-2'>
+                    <Label>Custom seek time</Label>
+                    <Input ref={seekTimeRef} className='w-16' type='number' placeholder='5' defaultValue={5} />
+                </div>
+            </div>
+            <ResizablePanelGroup className="relative w-full flex flex-row items-center justify-center gap-4 p-4" direction='horizontal'>
                 <ResizablePanel defaultSize={65}>
-                    <VideoPlayer timeRef={timeRef} link={path as string} name={videoTitle} key={videoTitle} />
+                    <VideoPlayer seekTimeRef={seekTimeRef} timeRef={timeRef} link={path as string} name={videoTitle} key={videoTitle} />
                 </ResizablePanel>
                 <ResizableHandle className='h-full' withHandle />
                 <ResizablePanel>

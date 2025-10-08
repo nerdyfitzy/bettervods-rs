@@ -7,6 +7,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/layout/app-sidebar'
 import { Toaster } from 'sonner'
 import { checkForAppUpdates } from '@/updater'
+import { invoke } from '@tauri-apps/api/core'
 
 export const Route = createRootRoute({
     component: RootComponent,
@@ -16,6 +17,8 @@ function RootComponent() {
     useEffect(() => {
         //@ts-ignore
         checkForAppUpdates().then((_) => console.log('done'));
+        invoke('read_timestamps_from_json')
+            .then(_ => console.log('read'))
     }, [])
     return (
         <React.Fragment>

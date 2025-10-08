@@ -118,11 +118,9 @@ export function TimestampForm({ timeRef, fileName }: { fileName: string; timeRef
         mutationKey: ['add_timestamp'],
         mutationFn: (data: { name: string; time_in_seconds: number }) => {
             const { name, time_in_seconds } = data;
-            console.log(name, time_in_seconds, fileName)
 
             return invoke('create_timestamp', { fileName, name, timeInSeconds: Math.floor(time_in_seconds) })
         },
-        onError: (e) => console.log(e),
         onSuccess: () => {
             console.log('settled')
             queryClient.invalidateQueries({

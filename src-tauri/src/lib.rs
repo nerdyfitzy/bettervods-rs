@@ -3,14 +3,14 @@ use directories::BaseDirs;
 use serde::{Deserialize, Serialize};
 
 use std::ffi::OsString;
-use std::io::{BufRead, BufReader};
+use std::fs::File;
+use std::io::{copy, stdout, BufRead, BufReader, BufWriter};
 use std::path::Path;
 use std::process::{Command, Stdio};
 use std::{collections::HashMap, sync::Mutex};
 use std::{fs, io};
 use tauri::{Builder, Manager, State};
 use tauri_plugin_dialog;
-use tauri_plugin_updater::UpdaterExt;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -39,10 +39,7 @@ fn create_timestamp(
     state
         .timestamps
         .entry(file_name.to_owned())
-        .or_insert(vec![Timestamp {
-            name: name.to_owned(),
-            time_in_seconds,
-        }]);
+        .or_insert(vec![]);
 
     state.timestamps.entry(file_name_copy).and_modify(|item| {
         item.push(Timestamp {
@@ -51,7 +48,80 @@ fn create_timestamp(
         })
     });
 
+    let base_dirs = match BaseDirs::new() {
+        Some(v) => v,
+        _ => panic!("panicked"),
+    };
+    let local_dir = base_dirs.cache_dir();
+    let vods_dir = local_dir.join(Path::new("bettervods\\timestamps.json"));
+
+    let file = File::create(vods_dir).unwrap();
+    let writer = BufWriter::new(file);
+
+    serde_json::to_writer_pretty(writer, &state.timestamps).unwrap();
+
     Some(())
+}
+
+#[tauri::command]
+fn delete_timestamp(state: State<'_, Mutex<AppState>>, file_name: &str, name: &str) -> String {
+    println!("Deleting");
+    let mut state = state.lock().unwrap();
+    let mut index = 0;
+
+    for &timestamp in state.timestamps.get(&file_name.to_owned()).iter() {
+        for ts in timestamp.iter() {
+            println!("{:?}", ts.name);
+            if ts.name == name {
+                break;
+            }
+            index = index + 1;
+        }
+
+        break;
+    }
+
+    state
+        .timestamps
+        .entry(file_name.to_owned())
+        .and_modify(|item| {
+            item.remove(index);
+        });
+
+    let base_dirs = match BaseDirs::new() {
+        Some(v) => v,
+        _ => panic!("panicked"),
+    };
+    let local_dir = base_dirs.cache_dir();
+    let vods_dir = local_dir.join(Path::new("bettervods\\timestamps.json"));
+
+    let file = File::create(vods_dir).unwrap();
+    let writer = BufWriter::new(file);
+
+    serde_json::to_writer_pretty(writer, &state.timestamps).unwrap();
+
+    name.to_owned()
+}
+
+#[tauri::command]
+fn read_timestamps_from_json(state: State<'_, Mutex<AppState>>) {
+    let base_dirs = match BaseDirs::new() {
+        Some(v) => v,
+        _ => panic!("panicked"),
+    };
+
+    let local_dir = base_dirs.cache_dir();
+    let timestamps_path = local_dir.join(Path::new("bettervods\\timestamps.json"));
+
+    if Path::exists(&timestamps_path) {
+        let data = fs::read_to_string(timestamps_path).expect("unreadable");
+        let json: HashMap<String, Vec<Timestamp>> =
+            serde_json::from_str(&data).expect("invalid json");
+
+        let mut state = state.lock().unwrap();
+
+        state.timestamps = json;
+    }
 }
 
 #[tauri::command]
@@ -187,30 +257,6 @@ fn create_vods_dir() -> bool {
     return false;
 }
 
-// async fn update(app: tauri::AppHandle) -> tauri_plugin_updater::Result<()> {
-//     if let Some(update) = app.updater()?.check().await? {
-//         let mut downloaded = 0;
-//
-//         // alternatively we could also call update.download() and update.install() separately
-//         update
-//             .download_and_install(
-//                 |chunk_length, content_length| {
-//                     downloaded += chunk_length;
-//                     println!("downloaded {downloaded} from {content_length:?}");
-//                 },
-//                 || {
-//                     println!("download finished");
-//                 },
-//             )
-//             .await?;
-//
-//         println!("update installed");
-//         app.restart();
-//     }
-//
-//     Ok(())
-// }
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let _ = create_vods_dir();
@@ -232,7 +278,9 @@ pub fn run() {
             get_all_vods,
             get_full_path,
             create_timestamp,
-            get_all_timestamps_for_video
+            get_all_timestamps_for_video,
+            read_timestamps_from_json,
+            delete_timestamp
         ])
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())

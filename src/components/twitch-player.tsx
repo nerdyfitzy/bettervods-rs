@@ -3,7 +3,7 @@ import duration from 'dayjs/plugin/duration'
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from '@tanstack/react-router';
-import Spinner from './ui/spinner';
+import { Spinner } from './ui/spinner';
 import { useTwitchPlayer } from '@/hooks/useTwitchPlayer';
 import { useM3u8State } from '@/hooks/useM3u8State';
 import { useConvertMutation } from '@/hooks/useConvertMutation';

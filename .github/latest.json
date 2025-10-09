@@ -1,11 +1,11 @@
 {
-  "version": "v0.2.0",
-  "notes": "Autoupdater, UX Improvements, Bug fixes",
-  "pub_date": "2025-10-02T23:30:00Z",
+  "version": "v0.2.2",
+  "notes": "Timestamp UI enhancements, Persistent timestamps, Custom seeking value",
+  "pub_date": "2025-10-08T20:30:00Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRUXY0WTJCcWtkd3JxNVBGK1pZY2FBd01CYXpMbkxlZnQvOTBYWDhjVklNaHdYdnVPOXp1MjZ4bldzYW9XejhGZFhQWmpMQU9YT0dIS05SV05GNHZSamVLR1RKUmZ5cVF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU5NDY1OTE0CWZpbGU6YmV0dGVydm9kcy1yc18wLjIuMF94NjQtc2V0dXAuZXhlCnUxSHoveWdURUh3WUR3M2tHdUZiNzZLYk5sMXVQbUVIQ3BUd0VESmhKMEJkK3ozZDZuR2RWZUg3Ry8yaXRzcHpla0N3RXdYZnJpV2VybmF1cG8rRkF3PT0K",
-      "url": "https://github.com/nerdyfitzy/bettervods-rs/releases/download/latest/bettervods-rs_0.2.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU21udmRzdnF1WmZUZURlaEp4dFUrOUVWQlFQWmJ3dFBVUTJOazlBTTBZOVFNcjdDK1hmSCttQVAva1hVSVk3K1hTU0hNbjBlMW5jdXRLOWh3NnVHUi9Zeno1eDVaWGcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzU5OTcwNjMzCWZpbGU6YmV0dGVydm9kcy1yc18wLjIuMl94NjQtc2V0dXAuZXhlCnRoY2M0NmorMGlrQ3NNdzlmR2k4RTBZSVpFWUk1ZkRwbW81dHdTQXhteGQ4bDUvQXp4M3lHM3BlMmIrb3RRV2FZV2VHWWhUblppUTVKSnUxMEloekNRPT0K",
+      "url": "https://github.com/nerdyfitzy/bettervods-rs/releases/download/latest/bettervods-rs_0.2.2_x64-setup.exe"
     }
   }
 }

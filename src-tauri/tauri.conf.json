@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "bettervods-rs",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "identifier": "bettervods",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -49,7 +49,7 @@
     "updater": {
       "dialog": true,
       "active": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMyMURBOTA2MzY4NkJGMTAKUldRUXY0WTJCcWtkd3BNYm50cnNLb3FrVzVYMkgzcHJ5NDRLcW5lbHZ5OVVWSkIvSzNPYUVSeTUK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY1QUVGQUIyREQ3QjlBRDIKUldUU21udmRzdnF1WlFJNFlkL3pzNUE4c0QzaFpXSWRzNDBNOXJseHpucVRncnBHOUlTcDUvazMK",
       "endpoints": [
         "https://raw.githubusercontent.com/nerdyfitzy/bettervods-rs/refs/heads/release/.github/latest.json"
       ]

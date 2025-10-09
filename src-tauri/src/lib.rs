@@ -188,23 +188,25 @@ fn is_name_available(name: &str) -> bool {
 }
 
 #[tauri::command]
-fn convert_from_m3u8(url: &str, name: &str, start_time: &str, end_time: &str) -> Option<i32> {
+async fn convert_from_m3u8(
+    url: &str,
+    name: &str,
+    start_time: &str,
+    end_time: &str,
+) -> Result<i32, ()> {
     if let Some(base_dirs) = BaseDirs::new() {
         let home = base_dirs.cache_dir();
         let final_str = format!("bettervods\\vods\\{}.mkv", name);
         let file_path = home.join(Path::new(&final_str));
+
+        let str_path = match file_path.to_str() {
+            Some(v) => v,
+            _ => panic!(),
+        };
         println!("{:?}", file_path);
         let mut cmd = Command::new("ffmpeg")
             .args([
-                "-i",
-                url,
-                "-ss",
-                start_time,
-                "-to",
-                end_time,
-                "-c",
-                "copy",
-                file_path.to_str()?,
+                "-i", url, "-ss", start_time, "-to", end_time, "-c", "copy", str_path,
             ])
             .stdout(Stdio::piped())
             .spawn()
@@ -230,7 +232,7 @@ fn convert_from_m3u8(url: &str, name: &str, start_time: &str, end_time: &str) ->
         println!("running");
         cmd.wait().unwrap();
         println!("ran");
-        Some(200)
+        Ok(200)
     } else {
         panic!();
     }

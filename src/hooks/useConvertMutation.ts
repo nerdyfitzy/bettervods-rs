@@ -11,7 +11,9 @@ export function useConvertMutation(navigate: UseNavigateResult<'/convert'>) {
             return invoke('convert_from_m3u8', { url: m3u8, startTime, endTime, name })
         },
         onSuccess: () => {
-            toast('VOD has been downloaded')
+            toast('VOD has been downloaded', {
+                description: 'Please hit Ctrl + R to properly load the video'
+            })
             navigate({ to: '/' })
         },
         onError: () => console.log('error oopsies')

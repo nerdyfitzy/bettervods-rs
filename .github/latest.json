@@ -1,6 +1,6 @@
 {
-  "version": "v0.2.2",
-  "notes": "Timestamp UI enhancements, Persistent timestamps, Custom seeking value",
+  "version": "v0.2.3",
+  "notes": "Converting video no longer freezes UI",
   "pub_date": "2025-10-09T13:55:00Z",
   "platforms": {
     "windows-x86_64": {

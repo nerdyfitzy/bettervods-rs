@@ -5,7 +5,6 @@ const initializePlayer = (
     id: string,
     callback: (player: Player) => void
 ): (() => void) => {
-    console.log("init player")
     const clearCurrent = () => {
         const playerElement = document.getElementById("vod-player");
         if (playerElement) {
@@ -35,7 +34,6 @@ const initializePlayer = (
     callback(player);
 
     return () => {
-        console.log(player);
         clearCurrent();
     };
 };

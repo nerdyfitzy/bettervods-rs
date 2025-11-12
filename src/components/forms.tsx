@@ -39,10 +39,9 @@ export function Converter() {
     })
 
     function onSubmit(values: z.infer<typeof converterFormSchema>) {
-        console.log(values.url);
-
-        const parts = values.url.split('/')
-        const vodId = parts[parts.length - 1]
+        const url = URL.parse(values.url)
+        const parts = url?.pathname.split('/')
+        const vodId = parts ? parts[parts.length - 1] : undefined
         if (typeof vodId == "string") {
             setVodId(vodId)
             mutation.mutate({ url: values.url, name: values.name })

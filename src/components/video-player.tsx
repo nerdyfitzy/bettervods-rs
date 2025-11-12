@@ -20,7 +20,6 @@ function VideoPlayer({ link, name, timeRef, seekTimeRef, className }:
     const seekTime = seekTimeRef.current?.value;
     useSeek(timeRef);
 
-    console.log(seekTime)
     return (
         <>
             <MediaPlayer
